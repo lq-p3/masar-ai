@@ -1,0 +1,40 @@
+{
+  "name": "masar-ai-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Masar AI - Production Cloud Run Ready Backend API Service",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "migrate-legacy": "tsx src/scripts/migrate-legacy-applications.ts"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^7.11.0",
+    "@google-cloud/storage": "^7.15.0",
+    "@google/genai": "^2.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "firebase-admin": "^13.2.0",
+    "google-auth-library": "^9.15.1",
+    "helmet": "^8.0.0",
+    "mammoth": "^1.9.0",
+    "multer": "^2.2.0",
+    "pdf-parse": "^1.1.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/multer": "^2.2.0",
+    "@types/node": "^22.14.0",
+    "@types/pdf-parse": "^1.1.4",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

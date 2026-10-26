@@ -1,0 +1,22 @@
+# Node / Build artifacts
+node_modules/
+build/
+dist/
+coverage/
+
+# OS / Environment files
+.DS_Store
+*.log
+.env
+.env.local
+.env.*.local
+!.env.example
+!server/.env.example
+
+# Google Cloud credentials & key files (NEVER commit secrets)
+*credentials*.json
+*service-account*.json
+*.pem
+*.key
+key.json
+secrets/

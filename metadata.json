@@ -1,0 +1,6 @@
+{
+  "name": "Masar AI – مسار AI",
+  "description": "Intelligent job search and career management platform that tracks applications and provides AI insights.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

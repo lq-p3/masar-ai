@@ -1,0 +1,169 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Masar AI Backend API",
+    "version": "2.0.0",
+    "description": "Production-ready Multi-Tenant REST API with Firebase Bearer Token Authentication and User Workspace Isolation."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local Development Server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Firebase Authentication Bearer ID Token"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check status",
+        "security": [],
+        "responses": {
+          "200": { "description": "API is healthy" }
+        }
+      }
+    },
+    "/health/live": {
+      "get": {
+        "summary": "Liveness probe for Cloud Run",
+        "security": [],
+        "responses": {
+          "200": { "description": "Process is alive" }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "summary": "Readiness probe verifying Firestore connection",
+        "security": [],
+        "responses": {
+          "200": { "description": "Firestore is ready" },
+          "503": { "description": "Firestore is unavailable" }
+        }
+      }
+    },
+    "/api/me": {
+      "get": {
+        "summary": "Get authenticated user profile (users/{uid})",
+        "responses": {
+          "200": { "description": "User profile data" },
+          "401": { "description": "Unauthorized" }
+        }
+      },
+      "patch": {
+        "summary": "Update user profile fields",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "displayName": { "type": "string" },
+                  "location": { "type": "string" },
+                  "currentJobTitle": { "type": "string" },
+                  "careerTracks": { "type": "array", "items": { "type": "string" } },
+                  "onboardingCompleted": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Profile updated" },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/api/applications": {
+      "get": {
+        "summary": "Get job applications owned by authenticated user (userId == req.user.uid)",
+        "parameters": [
+          { "name": "status", "in": "query", "schema": { "type": "string" } },
+          { "name": "company", "in": "query", "schema": { "type": "string" } },
+          { "name": "source", "in": "query", "schema": { "type": "string" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 50 } }
+        ],
+        "responses": {
+          "200": { "description": "List of user-scoped applications" },
+          "401": { "description": "Unauthorized" }
+        }
+      },
+      "post": {
+        "summary": "Create job application for authenticated user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["company", "position"],
+                "properties": {
+                  "company": { "type": "string" },
+                  "position": { "type": "string" },
+                  "location": { "type": "string" },
+                  "status": { "type": "string" },
+                  "source": { "type": "string" },
+                  "matchScore": { "type": "number" },
+                  "jobUrl": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Application created with userId set to authenticated UID" },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/api/applications/{id}": {
+      "get": {
+        "summary": "Get application by ID (Owner only)",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Application details" },
+          "401": { "description": "Unauthorized" },
+          "404": { "description": "Not found or not owned by user" }
+        }
+      },
+      "patch": {
+        "summary": "Update application (Owner only)",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Application updated" },
+          "401": { "description": "Unauthorized" },
+          "404": { "description": "Not found or not owned by user" }
+        }
+      },
+      "delete": {
+        "summary": "Delete application (Owner only)",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Application deleted" },
+          "401": { "description": "Unauthorized" },
+          "404": { "description": "Not found or not owned by user" }
+        }
+      }
+    }
+  }
+}

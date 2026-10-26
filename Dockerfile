@@ -1,0 +1,33 @@
+# Stage 1: Build Vite static bundle
+FROM node:22-alpine AS builder
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . ./
+
+# Production environment variables for Vite build
+ARG VITE_API_BASE_URL=https://masar-ai-backend-828667104263.us-west4.run.app
+ARG VITE_FIREBASE_API_KEY
+ARG VITE_FIREBASE_AUTH_DOMAIN=masar-ai-504916.firebaseapp.com
+ARG VITE_FIREBASE_PROJECT_ID=masar-ai-504916
+ARG VITE_FIREBASE_STORAGE_BUCKET=masar-ai-504916.firebasestorage.app
+ARG VITE_FIREBASE_MESSAGING_SENDER_ID=828667104263
+ARG VITE_FIREBASE_APP_ID=1:828667104263:web:64dff324dc4f38ce86aea2
+
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_FIREBASE_API_KEY=$VITE_FIREBASE_API_KEY
+ENV VITE_FIREBASE_AUTH_DOMAIN=$VITE_FIREBASE_AUTH_DOMAIN
+ENV VITE_FIREBASE_PROJECT_ID=$VITE_FIREBASE_PROJECT_ID
+ENV VITE_FIREBASE_STORAGE_BUCKET=$VITE_FIREBASE_STORAGE_BUCKET
+ENV VITE_FIREBASE_MESSAGING_SENDER_ID=$VITE_FIREBASE_MESSAGING_SENDER_ID
+ENV VITE_FIREBASE_APP_ID=$VITE_FIREBASE_APP_ID
+
+RUN npm run build
+
+# Stage 2: Serve static files with Nginx
+FROM nginx:alpine AS runner
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
