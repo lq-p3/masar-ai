@@ -4,7 +4,7 @@ Production-ready Express & TypeScript backend REST API for **Masar AI**, integra
 
 ---
 
-## 🏗 Phase 2 Architecture Overview
+## Phase 2 Architecture Overview
 
 ```
 Client (React / Vite Frontend)
@@ -21,7 +21,7 @@ Express API Server (Port 8080)
 
 ---
 
-## 🔑 Authentication & Token Verification Flow
+## Authentication & Token Verification Flow
 
 1. User signs in via **Google Sign-In** on the frontend.
 2. Frontend retrieves the Firebase ID Token using `user.getIdToken()`.
@@ -32,7 +32,7 @@ Express API Server (Port 8080)
 
 ---
 
-## 🚀 Legacy Applications Migration
+## Legacy Applications Migration
 
 To migrate legacy application documents created before authentication existed:
 
@@ -48,7 +48,7 @@ This script finds documents in `applications` missing `userId` and assigns `user
 
 ---
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### Public Endpoints
 - `GET /health` - Service health status
@@ -70,7 +70,7 @@ This script finds documents in `applications` missing `userId` and assigns `user
 
 ---
 
-## 🔧 Firebase Console Setup Instructions
+## Firebase Console Setup Instructions
 
 1. Go to [Google Firebase Console](https://console.firebase.google.com/).
 2. Select existing Google Cloud project: **`masar-ai-504916`**.
